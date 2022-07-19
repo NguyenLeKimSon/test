@@ -16,10 +16,11 @@ const outGoingDocuments = new Schema({
     id: String,
     isImportFile: Boolean,
 
-})
+});
 
 
-module.exports = mongoose.model('outgoingdocuments', outGoingDocuments);
+module.exports = mongoose.model('outgoingdocuments', outGoingDocuments),
+    mongoose.model('crmsources', crmSources)
 
 
 
