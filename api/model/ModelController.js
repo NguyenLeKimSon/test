@@ -25,14 +25,32 @@ class DocController {
                     //         // })
                     //     }
                     // }
-                    const finalData = data.filter(object => object.documentField.includes('cng'))
-                    const newData = finalData.map(data => data.documentField)
+                    const finalData = data.filter(object => object.documentField.includes(''))
+                    //const newData = finalData.map(data => data.documentField).sort()
+                    function compare(a, b) {
+                        // Sử dụng toUpperCase() để chuyển các kí tự về cùng viết hoa
+                        const typeA = a.documentField.toUpperCase();
+                        const typeB = b.documentField.toUpperCase();
+
+                        let comparison = 0;
+                        if (typeA > typeB) {
+                            comparison = 1;
+                        } else if (typeA < typeB) {
+                            comparison = -1;
+                        }
+                        return comparison * -1;
+                    }
+
+                    const final2 = finalData.sort(compare);
+                    const newData = final2.map(data => data.documentField)
+
+
                     return res.json({
                         counting,
                         // data
                         //array
-                        finalData
-                        //newData
+                        //finalData
+                        newData
                     })
                 } catch (e) {
                     console.log(e)
