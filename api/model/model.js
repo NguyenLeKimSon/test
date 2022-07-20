@@ -19,8 +19,7 @@ const outGoingDocuments = new Schema({
 });
 
 
-module.exports = mongoose.model('outgoingdocuments', outGoingDocuments),
-    mongoose.model('crmsources', crmSources)
+module.exports = mongoose.model('outgoingdocuments', outGoingDocuments)
 
 
 

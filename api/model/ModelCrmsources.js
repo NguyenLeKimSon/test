@@ -15,7 +15,8 @@ const crmSources = new Schema({
     documentField: String,
     id: String,
     isImportFile: Boolean,
+    title: String,
 
-})
+});
 module.exports = mongoose.model('crmsources', crmSources);
 
