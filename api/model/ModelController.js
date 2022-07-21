@@ -144,16 +144,16 @@ class DocController {
         course.save()
         res.send('saved')
     }
-    async update(req, res) {
-        const course = await new dbOutGoing(req.body);
-        const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
-        course.save()
-        return res.send('updated')
-    }
-    async delete(req, res, next) {
-        const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
-        res.send('deleted')
+    // async update(req, res) {
+    //     const course = await new dbOutGoing(req.body);
+    //     const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
+    //     course.save()
+    //     return res.send('updated')
+    // }
+    // async delete(req, res, next) {
+    //     const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
+    //     res.send('deleted')
 
-    }
+    // }
 }
 module.exports = new DocController
