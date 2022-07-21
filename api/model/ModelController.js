@@ -1,45 +1,68 @@
-//const { Aggregate } = require('mongoose');
-const db = require('./model')
-const db2 = require('./ModelCrmsources')
+const dbOutGoing = require('./ModelOutGoing')
+const dbCrmSources = require('./ModelCrmsources')
 class DocController {
 
+    // async display(req, res, next) {
+    //     try {
+    //         const data1 = await dbOutGoing.find({}, { privateLevel: 1 });
+    //         const data2 = await dbCrmSources.distinct('data.value', { title: "Độ mật" });
+    //         const arr = []
+    //         for (let i = 0; i < data1.length; i++) {
+    //             const finalData = data1[i]
+    //             const PL = finalData.privateLevel.toString()
+    //             const length = data2.length
+    //             for (let j = 0; j < length; j++) {
+    //                 if (!data2.includes(`${PL}`)) {
+    //                     arr.push(finalData)
+    //                 }
+    //             }
+    //         }
+    //         return res.json({
+    //             //data2,
+    //             arr
+    //         })
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // };
     async display(req, res, next) {
         try {
-            var page = req.query.page;
-            var count = req.query.count;
-            if (page) {
-                page = parseInt(page)
-                if (page < 1) { page === 1 }
-                var skip = (page - 1) * count
-                try {
-                    const data2 = await db2.find({}, { title: 1 }).skip(skip).limit(count);
 
-                    const counting2 = await db2.countDocuments({ type: '_id' });
-
-                    const finalData = data2.filter(object => object.title.includes('Độ mật'))
-                    //const finalFlash = checkData.filter(object => object.documentField.includes('Độ mật'))
-
-
-                    return res.json({
-                        counting2,
-                        //checkData,
-                        finalData
-                    })
-                } catch (e) {
-                    console.log(e)
+            const data1 = await dbOutGoing.distinct('privateLevel')
+            const data2 = await dbCrmSources.distinct('data.value', { title: "Độ mật" });
+            var result = [];
+            for (var i = 0; i < data1.length; i++) {
+                if (!(data2.indexOf(data1[i]) > -1)) {
+                    result.push(data1[i])
                 }
-            } else {
-                const data2 = await db2.find({}, { title: 1 })
-                const counting2 = await db2.countDocuments({ type: '_id' });
-                return res.json({
-                    counting2,
-                    data2
-                })
             }
-        } catch (error) {
-            console.log(error)
+
+            console.log(result.toString())
+
+            return res.json({
+                result
+            })
+        } catch (e) {
+            console.log(e)
         }
     };
+    async edit(req, res, next) {
+        try {
+            await dbOutGoing.updateMany(
+                { privateLevel: "Mật thư" },
+                {
+                    $set: {
+                        privateLevel: "m-th"
+                    }
+                }
+            )
+
+            res.send('updated')
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
     //--------------------------------------------------------------------//
     async get(req, res, next) {
         try {
@@ -50,9 +73,9 @@ class DocController {
                 if (page < 1) { page === 1 }
                 var skip = (page - 1) * count
                 try {
-                    const data = await db.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 }).skip(skip).limit(count)
+                    const data = await dbOutGoing.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 }).skip(skip).limit(count)
 
-                    const counting = await db.countDocuments({ type: '_id' });
+                    const counting = await dbOutGoing.countDocuments({ type: '_id' });
                     // const array = []
                     // for (let i = 0; i < data.length; i++) {
                     //     const field = data[i].documentField
@@ -96,8 +119,8 @@ class DocController {
                     console.log(e)
                 }
             } else {
-                const data = await db.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 })
-                const counting = await db.countDocuments({ type: '_id' });
+                const data = await dbOutGoing.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 })
+                const counting = await dbOutGoing.countDocuments({ type: '_id' });
                 return res.json({
                     counting,
                     data
@@ -109,8 +132,8 @@ class DocController {
     }
     async show(req, res) {
         // res.send('hello')
-        const data = await db.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 })
-        const counting = await db.countDocuments({ type: '_id' });
+        const data = await dbOutGoing.find({}, { abstractNote: 1, documentType: 1, urgencyLevel: 1, privateLevel: 1, documentField: 1 })
+        const counting = await dbOutGoing.countDocuments({ type: '_id' });
         res.json({
             counting,
             data
@@ -121,14 +144,14 @@ class DocController {
         course.save()
         res.send('saved')
     }
-    async edit(req, res) {
-        const course = await new db(req.body);
-        const c = await Course.findOneAndDelete({ _id: req.params._id });
+    async update(req, res) {
+        const course = await new dbOutGoing(req.body);
+        const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
         course.save()
         return res.send('updated')
     }
     async delete(req, res, next) {
-        const c = await db.findOneAndDelete({ _id: req.params._id });
+        const c = await dbOutGoing.findOneAndDelete({ _id: req.params._id });
         res.send('deleted')
 
     }

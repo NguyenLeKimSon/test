@@ -15,6 +15,11 @@ const outGoingDocuments = new Schema({
     documentField: String,
     id: String,
     isImportFile: Boolean,
+    privateLevel: String,
+    urgencyLevel: String,
+    prevStage: String,
+
+
 
 });
 
