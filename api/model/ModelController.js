@@ -56,7 +56,6 @@ class DocController {
                     }
                 }
             )
-
             res.send('updated')
 
         } catch (e) {
